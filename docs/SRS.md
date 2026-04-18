@@ -35,10 +35,10 @@
 
 ## Interface externe
 
->![Onglet de connexion](PConnexion.png "Onglet de connexion")
-![Demande de connexion](DeConnexion.png "Demande de connexion")
-![Onglet de transfere](PTransfere.png "Onglet de Transfere")
-![Confirmation de reception](DeFichier.png "Confirmation de reception")
+>![Onglet de connexion](img/PConnexion.png "Onglet de connexion")
+>![Demande de connexion](img/DeConnexion.png "Demande de connexion")
+>![Onglet de transfere](img/PTransfere.png "Onglet de Transfere")
+>![Confirmation de reception](img/DeFichier.png "Confirmation de reception")
 
 ---
 >[Achitecture et schemas](diagram.md)

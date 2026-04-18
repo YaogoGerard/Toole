@@ -2,9 +2,9 @@
 >Transférer des fichiers hors ligne entre deux ordinateurs reste complexe, obligeant souvent à recourir aux clés USB. Ces méthodes physiques alourdissent la procédure, soulignant un besoin de solutions de partage direct (sans internet).
 
 # Les Utilisteurs
->La soulution que nous voulons proposer s'adresse à tout les personnes de les ages, notament ceux ayant un ordinateur et pour qui transferer des fichiers semble etre un calvaire.
+>La solution que nous voulons proposer s'adresse à tout les personnes de les ages, notament ceux ayant un ordinateur et pour qui transferer des fichiers semble etre un calvaire.
 
-# Le Cadrage
+# Le Cadre
 ## En ligne de mire   
 - Un TUI (Text_based User Interface)
 - Une fonctionalité de Proximity Pairing
