@@ -98,10 +98,16 @@ void hear(int socket_udp,device *liste)
     
         if (result > 0) {
             buffer[result] = '\0';
-    
+            
+            //ici je filtre les beacons, pour ne laiser que les beacons avec la signature de toolé
             if (strncmp(buffer, "toole", 5) == 0) {
                 device d;
+                // Je  parse les beacons recues pour le mettre  dans la structure device que j'ai creé
                 sscanf(buffer, "toole|%36[^|]|%63[^|]|%15[^|]|%d|%127[^\n]", d.id, d.username, d.ip, &d.port_tcp, d.message);
+                
+                /*là pour eviter les doublons de beacons, je verifie la liste, si l'id d'un nouveau becons est deja present dans la liste ,
+                 je le suprime et dans le cas contraire , je l'ajoute imediatement
+                    */ 
                 int index = -1;
                 for (int i = 0; i < nb; i++) {
                     if (strcmp(liste[i].id, d.id) == 0) {
