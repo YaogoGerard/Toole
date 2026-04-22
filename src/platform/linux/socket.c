@@ -58,7 +58,6 @@ int hear_socket(){
     if (socket_udp<0){
         perror("La creation du socket a echoué");
     }
-
     // creation de la stucture(support pour la transmision)
     struct sockaddr_in network_utils=
         {
@@ -66,6 +65,13 @@ int hear_socket(){
         .sin_family= AF_INET,
         .sin_port= htons(BEACON_PORT)
     };
+    //ici j'attache le socket à la structure en haut
+    if(bind (socket_udp, (struct sockaddr *) &network_utils, sizeof( network_utils))< 0)
+    {
+        perror("bind() a echoué");
+        close(socket_udp);
+        return NULL;
+    }
     return socket_udp;
 }
 
@@ -78,43 +84,45 @@ typedef struct {
 } device;
 int nb=0;
 //hear ecoute les beacon sur le port d'emmision
-device *hear(int socket_udp)
+void hear(int socket_udp,device *liste)
 {
-
-    
-    //ici j'attache le socket à la structure en haut
-    if(bind (socket_udp, (struct sockaddr *) &network_utils, sizeof( network_utils))< 0)
-    {
-        perror("bind() a echoué");
-        close(socket_udp);
-        return NULL;
-    }
-
-
-    int capacite = 4;
-    int count = 0;
-    device *liste = malloc(capacite * sizeof(device));
-    if (liste == NULL) {
-        perror("malloc a echoue");
-        close(socket_udp);
-        return NULL;
-    }
-
     char buffer[256];
-    socklen_t size_of=sizeof(network_utils);
+    struct sockaddr_in sender_addr;
+    socklen_t size_of = sizeof(sender_addr);
+    ssize_t result=recvfrom(socket_udp, buffer, sizeof(buffer)-1, 0,(struct sockaddr *)&sender_addr, &size_of);
 
-    ssize_t result=recvfrom(socket_udp, buffer, sizeof(buffer)-1, 0,(struct sockaddr *)&network_utils, &size_of);
+    if (result > 0) {
+        buffer[result] = '\0';
 
+        if (strncmp(buffer, "toole", 5) == 0) {
+            device d;
+            sscanf(buffer, "toole|%36[^|]|%63[^|]|%15[^|]|%d|%127[^\n]", d.id, d.username, d.ip, &d.port_tcp, d.message);
+            liste[nb] = d;
+            nb++;
+        }
     }
+}
 
 
 int main(void)
 {
-    int sock=presence_socket();
+    // int sock=presence_socket();
+    // if (sock < 0) return 1;
+    // while (1) {
+    // presence(sock, "T-001", "Gerard", "192.168.100.1", 42422,"auto");
+    // sleep(5);
+    // }
+    // close(sock);
+    int sock = hear_socket();
+        if (sock < 0) return 1;
+    device *devices = malloc(100 * sizeof(device));
     while (1) {
-    presence(sock, "T-001", "Gerard", "192.168.100.1", 42422,"auto");
-    sleep(5);
+        hear(sock, devices);
+        for (int i = 0; i < nb; i++) {
+                    printf("[%d] %s | %s\n", i+1, devices[i].username, devices[i].ip);
+                }
     }
+    free(devices);
     close(sock);
     return 0;
 }
